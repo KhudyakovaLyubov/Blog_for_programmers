@@ -79,6 +79,9 @@ TEMPLATES = [
 ACCOUNT_EMAIL_UNIQUE = True
 ACCOUNT_EMAIL_CONFIRMATION_REQUIRED = True
 
+ACCOUNT_USER_DISPLAY = lambda user: user.email
+TEST_RUNNER = "accounts.tests.MyTestDiscoverRunner"
+
 WSGI_APPLICATION = 'Blog.wsgi.application'
 
 SITE_ID = 2

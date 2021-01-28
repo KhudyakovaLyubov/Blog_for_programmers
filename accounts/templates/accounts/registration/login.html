@@ -1,0 +1,14 @@
+{% block content %}
+<h2>Вход</h2>
+{% if user.is_authentificated %}
+<p>Вы уже выполнили вход</p>
+{% else %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Login">
+</form>
+{% endif %}
+<a href="">Back to profile</a>
+<a href="">Reset password</a>
+{% endblock %}

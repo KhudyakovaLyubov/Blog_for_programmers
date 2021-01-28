@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+from .dev_settings import GOOGLE_PASSWORD, YANDEX_PASSWORD
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -55,6 +56,7 @@ MIDDLEWARE = [
 MIDDLEWARE_CLASSES = [
     'account.middleware.LocaleMiddleware',
     'account.mibbleware.TimezoneMiddleware',
+    'account.middleware.ExpiredPasswordMiddleware',
 ]
 
 ROOT_URLCONF = 'Blog.urls'
@@ -62,7 +64,7 @@ ROOT_URLCONF = 'Blog.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [str(BASE_DIR.joinpath('templates'))],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -76,27 +78,42 @@ TEMPLATES = [
     },
 ]
 
-ACCOUNT_EMAIL_UNIQUE = True
-ACCOUNT_EMAIL_CONFIRMATION_REQUIRED = True
+LOGIN_REDIRECT_URL = ''
+LOGOUT_REDIRECT_URL = ''
 
-ACCOUNT_USER_DISPLAY = lambda user: user.email
-TEST_RUNNER = "accounts.tests.MyTestDiscoverRunner"
+ACCOUNT_UNIQUE_EMAIL = False #Уникальный адрес электронной почты учетной записи
+ACCOUNT_EMAIL_CONFIRMATION_REQUIRED = True #Требование подтверждения электронной почты учетной записи
+EMAIL_CONFIRMATION_UNIQUE_EMAIL = False
 
-WSGI_APPLICATION = 'Blog.wsgi.application'
+ACCOUNT_USER_DISPLAY = lambda user: user.email #Отображение учетной записи пользователя
+ACCOUNT_PASSWORD_EXPIRY = 60*60*24*7 #Истечение срока действия пароля учетной записи
+ACCOUNT_PASSWORD_USE_HISTORY = True #История использования пароля учетной записи
+
+TEST_RUNNER = "accounts.tests.MyTestDiscoverRunner" #Запуск тестов
+
+WSGI_APPLICATION = 'Blog.wsgi.application' #Приложение WSGI
 
 SITE_ID = 2
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'suiginto1996@gmail.com'
-EMAIL_HOST_PASSWORD = '15january2021yearSlava'
-EMAIL_POST = 587
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' #Серверная часть электронной почты
+EMAIL_HOST = 'smtp.gmail.com' #Хост электронной почты
+EMAIL_HOST_USER = 'suiginto1996@gmail.com' #Пользователя хоста электронной почты
+EMAIL_HOST_PASSWORD = GOOGLE_PASSWORD #Пароль пользователя хоста электронной почты
+EMAIL_PORT = 587 
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'support@BlogForProgrammers.ru'
 
+
+
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_HOST_USER = 'djangorestframework@yandex.ru'
+EMAIL_HOST_PASSWORD = YANDEX_PASSWORD
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
 AUTHENTICATION_BACKENDS = [
     'account.auth_backends.EmailAuthenticationBackend',
-]
+]       #Серверы аутентификации
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
